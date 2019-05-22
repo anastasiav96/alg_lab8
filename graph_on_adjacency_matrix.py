@@ -12,72 +12,43 @@ class AdjMatrixGraph:
         self.attributes = list()  # Список атрибутов вершин, list of dict
 
     def add_vertices(self, n):
-        """ Добавить n вершн в граф.
-
-        :param int n: колиичество вершин для добавления
-        """
         self.adj = self.enlarge_matrix(self.adj, n)
         for i in range(n):
             self.attributes.append(dict())
 
     def enlarge_matrix(self, a, n):
-        """ Добавляет с правого и нижнего края матрицы n столбцов и n строк с
-        нулями
-
-        :param np.array a: матрица
-        :param int n: количество строк/столбцов для добавления
-        :return: результат добавления
-        :rtype: np.array
-        """
         cols, rows = a.shape
         return np.hstack((np.vstack((a, np.zeros((n, cols)))),
                           np.zeros((rows + n, n))))
 
     def remove_vertex(self, v):
-        """ Удалить вершину из графа
-
-        :param int v: индекс вершинаы графа
-        """
         self.adj = np.delete(np.delete(self.adj, v, 1), v, 0)
         self.attributes.pop(v)
 
     def number_of_vertices(self):
-        """ Возвращает количество вершин графа
-
-        :rtype: int
-        """
         return len(self.attributes)
 
     def add_edge(self, u, v):
-        """ Добавить ребро, соединяющее вершины с индексами u и v
-
-        :param int u: индекс вершины графа
-        :param int v: индекс вершины графа
-        """
-        raise NotImplemented("Реализуйте этот метод")
+        self.adj[u][v] = 1
 
     def remove_edge(self, u, v):
-        """ Удалить ребро, соединяющее вершины с индексами u и v
-
-        :param int u: индекс вершины графа
-        :param int v: индекс вершины графа
-        """
-        raise NotImplemented("Реализуйте этот метод")
+        self.adj[u][v] = 0
 
     def number_of_edges(self):
-        """ Возвращает количество ребер в графе
-
-        :rtype: int
-        """
-        raise NotImplemented("Реализуйте этот метод")
+        cnt=0
+        for i in self.adj:
+            for j in i:
+                if j==1:
+                    cnt+=1
+        return cnt
 
     def neighbors(self, v):
-        """ Возвращает список индексов вершин, соседних с данной
-
-        :param int v: индекс вершины графа
-        :rtype: list of int
-        """
-        raise NotImplemented("Реализуйте этот метод")
+        ngb=[]
+        return self.adj[v]
+        for i in range(len(self.adj[v])):
+            if self.adj[v][i] == 1:
+                ngb.append(i)
+        return ngb
 
     def draw(self, filename='test.gv'):
         """
